@@ -1,0 +1,110 @@
+:root:not([data-theme]),
+:root[data-theme="ember"],
+.theme-swatch[data-theme="ember"] {
+  color-scheme: dark;
+  --paper: #1c1b1a;
+  --surface: #242220;
+  --ink: #eee7df;
+  --muted: #b5aaa0;
+  --line: #423b35;
+  --accent: #f3a65b;
+  --pale: #3b2c20;
+  --hover: #302b27;
+  --focus: #ffd0a0;
+  --warning: #f0c184;
+  --warning-bg: #342919;
+  --danger: #f2a297;
+  --shadow: 0 18px 70px #0007;
+}
+
+:root[data-theme="graphite"],
+.theme-swatch[data-theme="graphite"] {
+  color-scheme: dark;
+  --paper: #181818;
+  --surface: #202020;
+  --ink: #ededed;
+  --muted: #b0b0b0;
+  --line: #3d3d3d;
+  --accent: #c4c9d2;
+  --pale: #33363c;
+  --hover: #2b2b2b;
+  --focus: #dce6fa;
+  --warning: #e9c48b;
+  --warning-bg: #322a1d;
+  --danger: #f1a29d;
+  --shadow: 0 18px 70px #0007;
+}
+
+:root[data-theme="midnight"],
+.theme-swatch[data-theme="midnight"] {
+  color-scheme: dark;
+  --paper: #141821;
+  --surface: #1b2130;
+  --ink: #e2e8f5;
+  --muted: #a2afc7;
+  --line: #35415a;
+  --accent: #94b8ff;
+  --pale: #273853;
+  --hover: #252e42;
+  --focus: #c0d4ff;
+  --warning: #efcd90;
+  --warning-bg: #342d20;
+  --danger: #ffacae;
+  --shadow: 0 18px 70px #0007;
+}
+
+:root[data-theme="plum"],
+.theme-swatch[data-theme="plum"] {
+  color-scheme: dark;
+  --paper: #201925;
+  --surface: #292030;
+  --ink: #efe3f4;
+  --muted: #bcabc5;
+  --line: #49394f;
+  --accent: #d9a8ec;
+  --pale: #44304d;
+  --hover: #382b40;
+  --focus: #f0c9ff;
+  --warning: #f0c78f;
+  --warning-bg: #382c23;
+  --danger: #ffabb7;
+  --shadow: 0 18px 70px #0007;
+}
+
+:root[data-theme="paper"],
+.theme-swatch[data-theme="paper"],
+.theme-swatch[data-theme="system"] {
+  color-scheme: light;
+  --paper: #f6f4f0;
+  --surface: #fffdfa;
+  --ink: #302b26;
+  --muted: #6d6258;
+  --line: #ddd5cb;
+  --accent: #984515;
+  --pale: #f2e4d6;
+  --hover: #f3ece3;
+  --focus: #87411b;
+  --warning: #80501b;
+  --warning-bg: #fff0d9;
+  --danger: #a2332c;
+  --shadow: 0 18px 70px #302b2626;
+}
+
+.theme-swatch {
+  --sample-paper: var(--paper);
+  --sample-surface: var(--surface);
+  --sample-line: var(--line);
+  --sample-ink: var(--ink);
+  --sample-accent: var(--accent);
+}
+
+@media (prefers-color-scheme: dark) {
+  .theme-swatch[data-theme="system"] {
+    color-scheme: dark;
+    --paper: #1c1b1a;
+    --surface: #242220;
+    --line: #423b35;
+    --ink: #eee7df;
+    --accent: #f3a65b;
+  }
+}

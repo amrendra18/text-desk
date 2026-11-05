@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="320" viewBox="0 0 1280 320" role="img" aria-label="text-desk. Open a note. Read it. Edit it.">
+<rect width="1280" height="320" fill="#4a2e1b"/>
+<path d="M0 46C260 28 520 66 800 44S1140 30 1280 52M0 112C300 96 500 134 820 108S1120 96 1280 118M0 182C240 166 560 204 840 176S1160 168 1280 190M0 254C280 238 540 272 800 246S1180 240 1280 262" stroke="#3d2515" stroke-width="3" fill="none"/>
+<g font-family="-apple-system, Segoe UI, Helvetica, Arial, sans-serif">
+<text x="64" y="150" font-size="84" font-weight="700" letter-spacing="-2" fill="#fbf3e4">text-desk</text>
+<text x="66" y="204" font-size="30" fill="#f7c48e">Open a note. Read it. Edit it.</text>
+<rect x="598" y="38" width="370" height="260" rx="14" fill="#2a190e" opacity="0.5"/>
+<rect x="590" y="30" width="370" height="260" rx="14" fill="#fffdfa" stroke="#ddd5cb" stroke-width="2"/>
+<path d="M622 84V222M622 124H644M622 172H644M622 222H644" stroke="#c9bdaf" stroke-width="2" fill="none"/>
+<path d="M610 54a4 4 0 0 1 4-4h12l6 7h18a4 4 0 0 1 4 4v14a4 4 0 0 1-4 4H614a4 4 0 0 1-4-4z" fill="#984515"/>
+<text x="664" y="74" font-size="26" font-weight="600" fill="#302b26">notes</text>
+<text x="652" y="133" font-size="26" fill="#6d6258">ideas.md</text>
+<rect x="642" y="150" width="302" height="44" rx="8" fill="#f2e4d6"/>
+<text x="652" y="181" font-size="26" font-weight="600" fill="#7a3510">field-notes.md</text>
+<text x="652" y="231" font-size="26" fill="#6d6258">trips.md</text>
+<path d="M962 172C995 172 995 150 1022 150" stroke="#f7c48e" stroke-width="3" stroke-dasharray="3 8" stroke-linecap="round" fill="none"/>
+<path d="M1014 141l11 9-11 9" stroke="#f7c48e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+<rect x="1042" y="60" width="192" height="216" rx="8" fill="#2a190e" opacity="0.5"/>
+<rect x="1034" y="52" width="192" height="216" rx="8" fill="#fffdfa" stroke="#ddd5cb" stroke-width="2"/>
+<text x="1054" y="98" font-size="24" font-weight="700" fill="#302b26">Field notes</text>
+<path d="M1054 128H1206M1054 156H1190M1054 184H1206M1054 212H1160M1054 240H1186" stroke="#ddd5cb" stroke-width="8" stroke-linecap="round" fill="none"/>
+</g>
+<g transform="rotate(-2 200 248)">
+<rect x="72" y="248" width="300" height="16" fill="#2a190e" opacity="0.45"/>
+<rect x="66" y="240" width="270" height="16" fill="#f3a65b"/>
+<rect x="66" y="240" width="26" height="16" fill="#c9c2b8"/>
+<path d="M336 240l34 8-34 8z" fill="#ecd9bb"/>
+<path d="M358 245l12 3-12 3z" fill="#302b26"/>
+</g>
+</svg>

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>text-desk</title><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="themes.css"></head>
+<body>
+<header class="toolbar"><div class="brand">text-desk</div><button id="open-file">Open file</button><button id="open-folder">Open folder</button><div class="grow"></div><button id="settings" disabled>Settings</button></header>
+<div class="workspace" id="workspace">
+<aside class="sidebar" aria-label="Files"><div class="sidebar-heading"><span id="folder-name">Files</span><button id="refresh-folder" class="plain" title="Refresh folder" hidden>Refresh</button></div><nav class="tree" id="tree" aria-label="Folder files"></nav><div class="sidebar-foot">Markdown files open here.</div></aside>
+<main class="main"><div class="filebar" id="filebar"></div><div class="banner" id="banner" role="status" hidden></div><div class="content" id="content"></div><footer class="status" id="status" aria-live="polite"></footer></main>
+</div>
+<dialog id="settings-dialog" aria-labelledby="settings-title">
+<div class="dialog-head"><h2 id="settings-title">Settings</h2></div>
+<div class="dialog-body"><div id="theme-picker"></div><p id="settings-error" class="error-text" role="alert" hidden></p><div class="choice"><input type="checkbox" id="autosave"><div><label for="autosave">Autosave</label><p>Save after you stop typing. Errors pause autosave and keep your draft.</p></div></div></div>
+<div class="dialog-actions"><button id="settings-close">Close</button></div>
+</dialog>
+<dialog id="guard-dialog" aria-labelledby="guard-title">
+<div class="dialog-head"><h2 id="guard-title">Save your changes?</h2></div>
+<div class="dialog-body"><p>Your document has unsaved changes.</p></div>
+<div class="dialog-actions"><button id="guard-cancel" autofocus>Cancel</button><button id="guard-discard">Discard</button><button id="guard-save" class="primary">Save</button></div>
+</dialog>
+<dialog id="confirm-dialog" aria-labelledby="confirm-title">
+<div class="dialog-head"><h2 id="confirm-title">Reload from disk?</h2></div>
+<div class="dialog-body"><p>Reload replaces your draft with the file currently on disk.</p></div>
+<div class="dialog-actions"><button id="confirm-no" autofocus>Cancel</button><button id="confirm-yes" class="primary">Reload</button></div>
+</dialog>
+<dialog id="rename-dialog" aria-labelledby="rename-title">
+<div class="dialog-head"><h2 id="rename-title">Rename file</h2></div>
+<div class="dialog-body"><label for="rename-input" class="field">Filename</label><input id="rename-input" class="full" autocomplete="off"><p id="rename-error" class="error-text" role="alert"></p></div>
+<div class="dialog-actions"><button id="rename-cancel">Cancel</button><button id="rename-confirm" class="primary">Rename</button></div>
+</dialog>
+<dialog id="trash-dialog" aria-labelledby="trash-title">
+<div class="dialog-head"><h2 id="trash-title">Move file to Trash?</h2></div>
+<div class="dialog-body"><p id="trash-description">You can restore the file from your Mac's Trash.</p></div>
+<div class="dialog-actions"><button id="trash-cancel" autofocus>Cancel</button><button id="trash-confirm" class="danger">Move to Trash</button></div>
+</dialog>
+<script src="markdown.js"></script><script type="module" src="app.js"></script>
+</body></html>

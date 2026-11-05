@@ -1,0 +1,74 @@
+#!/usr/bin/env node
+import { mkdir, readFile, symlink, writeFile } from 'node:fs/promises';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { createInterface } from 'node:readline/promises';
+import { sourceState } from './source-state.mjs';
+
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const args = process.argv.slice(2);
+if (args.includes('--help')) {
+  console.log('Usage: scripts/hand-journey [--prepare]\nCreates disposable examples for seven app checks and two command checks.\n--prepare writes instructions without opening the app or asking for input.\nWithout --prepare, records your observations. You launch the app yourself.\nFinishing the script does not prove the app works.');
+  process.exit(0);
+}
+if (args.some((arg) => arg !== '--prepare') || args.length > 1) throw new Error('Unknown option. Use --help.');
+if (!args.includes('--prepare') && !process.stdin.isTTY) throw new Error('Use --prepare outside an interactive terminal.');
+const artifact = path.join(root, '.local/package/text-desk.app');
+let build;
+try { build = JSON.parse(await readFile(path.join(artifact, 'Contents/Resources/text-desk-build.json'), 'utf8')); }
+catch { if (!args.includes('--prepare')) throw new Error('Build the local app first with npm run package.'); }
+const directory = path.join(root, '.local/hand-journey', new Date().toISOString().replace(/[:.]/g, '') + '-' + process.pid);
+const examples = path.join(directory, 'examples');
+await mkdir(path.join(examples, 'nested'), { recursive: true });
+const commandBin = path.join(directory, 'bin');
+await mkdir(commandBin);
+await symlink(path.join(root, 'bin/text-desk'), path.join(commandBin, 'text-desk'));
+const document = path.join(examples, 'readme.md');
+const conflict = path.join(examples, 'conflict.md');
+const blocked = path.join(examples, 'blocked-save.md');
+await writeFile(document, '# Hand journey\n\nRead, then edit this disposable note.\n\n| Item | State |\n| --- | --- |\n| Preview | Visible |\n\n- [x] Read a note\n- [ ] Edit a note\n\n```text\nA local code example\n```\n\n![Local pixel](pixel.png)\n\n[Related note](related.md)\n');
+await writeFile(path.join(examples, 'related.md'), '# Related note\n\nThis file is safe to edit.\n');
+await writeFile(path.join(examples, 'trash-me.md'), '# Disposable Trash example\n\nRename and move only this file to Trash.\n');
+await writeFile(conflict, '# Conflict example\n\nOriginal text.\n');
+await writeFile(blocked, '# Save failure example\n\nOriginal text.\n');
+await writeFile(path.join(examples, 'nested/config.txt'), 'This unsupported file must stay unchanged.\n');
+await writeFile(path.join(examples, 'nested/note.md'), '# Nested note\n\nA folder example.\n');
+await writeFile(path.join(examples, 'pixel.png'), Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR4nGP4PzUAAAR7AeUUAlATAAAAAElFTkSuQmCC', 'base64'));
+const quote = (value) => "'" + value.replaceAll("'", "'\\''") + "'";
+const launch = `open -n ${quote(artifact)} --args ${quote('--profile=' + path.join(directory, 'profile'))}`;
+const external = `printf '\\nOutside edit.\\n' >> ${quote(conflict)}`;
+const lock = `chmod 444 ${quote(blocked)}`;
+const restore = `chmod 644 ${quote(blocked)}`;
+const commandProfile = path.join(directory, 'command-profile');
+const commandOpen = (file) => `cd /private/tmp && PATH=${quote(commandBin)}:"$PATH" TEXT_DESK_STATE_DIR=${quote(commandProfile)} text-desk open ${quote(file)} --format json`;
+const steps = [
+  { action: `Run the launch command. Choose Open file and select ${document}. Open the picker again, then cancel.`, expected: 'The heading, table, tasks, code, and local image appear. Cancel keeps the current document.' },
+  { action: `Choose Open folder and select ${examples}. Expand nested. Select note.md, then config.txt.`, expected: 'All names appear. Markdown opens. The unsupported file stays unchanged.' },
+  { action: 'Open readme.md. Show source and try typing. Choose Edit, change text, then use Save. Change text again and press Command-S.', expected: 'Source is read-only before Edit. Editing shows preview left and source right. Both saves write the changes.' },
+  { action: 'Enable Autosave in Settings. Edit readme.md, then select related.md. Disable Autosave, edit related.md, select readme.md, then choose Cancel.', expected: 'Autosave writes readme.md. Cancel keeps the related.md draft and selection.' },
+  { action: `Save or discard the current draft. Open conflict.md with Autosave disabled. Edit it, run the outside-edit command, then Save. Try Save copy. Repeat the conflict and try Reload. Open blocked-save.md, choose Edit, type, run the lock command, then Save. Restore permission afterward.\n\nOutside edit:\n\`\`\`sh\n${external}\n\`\`\`\nLock:\n\`\`\`sh\n${lock}\n\`\`\`\nRestore:\n\`\`\`sh\n${restore}\n\`\`\``, expected: 'Outside changes offer recovery. Save copy keeps the draft in your chosen new file. Reload shows disk text. A blocked save keeps the draft.' },
+  { action: 'Open trash-me.md. Rename it to renamed.md. Choose Move to Trash, then cancel. Try again and confirm. Inspect macOS Trash.', expected: 'Rename changes the name. Cancel keeps the file. Confirmation moves this disposable file to Trash with its text intact.' },
+  { action: 'Try Ember, Graphite, Midnight, Plum, Paper, and System in Settings. Change Mac appearance while using System. Use Tab and Shift-Tab. Select a theme, enable Autosave, quit, and relaunch with the same command.', expected: 'Themes remain readable. System follows Mac appearance. Controls work with the keyboard. Theme and Autosave persist after restart.' },
+  { action: `Quit the app. Run this command from another folder:\n\n\`\`\`sh\n${commandOpen(document)}\n\`\`\``, expected: 'The command prints one JSON object with window started. The disposable document appears. The app stays open after the command ends.' },
+  { action: `With that window open, choose Edit and type an unsaved change. Run this command:\n\n\`\`\`sh\n${commandOpen(path.join(examples, 'related.md'))}\n\`\`\`\n\nChoose Cancel, run the command again, then choose Discard.`, expected: 'Both commands print window running. Cancel keeps the draft and original disk bytes. Discard opens related.md in the same window.' },
+];
+const report = { sourceCommit: build?.sourceCommit ?? sourceState(root).commit, dirtyFiles: build?.dirtyFiles ?? null, packaged: Boolean(build), preparedAt: new Date().toISOString(), artifact, launch, examples, steps: steps.map((step, index) => ({ number: index + 1, ...step, observation: null })), unresolved: null };
+const instructions = `# text-desk hand journey\n\nSource commit: ${report.sourceCommit || 'unknown (no Git history)'}\nPackaged source changes: ${build ? build.dirtyFiles.length : 'package unavailable'}\n\nUse only the disposable examples below. Close another text-desk window before starting.\n\nLaunch or relaunch:\n\`\`\`sh\n${launch}\n\`\`\`\n\n${steps.map((step, index) => `${index + 1}. ${step.action}\n\nExpected: ${step.expected}`).join('\n\n')}\n\nRecord what you observed, including any failure. Finishing the script does not prove the app works.\n`;
+await writeFile(path.join(directory, 'instructions.md'), instructions);
+const evidence = path.join(directory, 'observations.json');
+const save = () => writeFile(evidence, JSON.stringify(report, null, 2) + '\n');
+await save();
+console.log(instructions);
+console.log(`Instructions and evidence: ${directory}`);
+if (!args.includes('--prepare')) {
+  const input = createInterface({ input: process.stdin, output: process.stdout });
+  try {
+    for (const step of report.steps) {
+      step.observation = await input.question(`Step ${step.number}. What did you observe? `);
+      await save();
+    }
+    report.unresolved = await input.question('What remains unresolved, if anything? Use your own words. ');
+    await save();
+  } finally { input.close(); }
+  console.log(`Observations saved to ${evidence}. The script does not judge them.`);
+}

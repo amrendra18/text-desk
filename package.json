@@ -1,0 +1,29 @@
+{
+  "name": "text-desk",
+  "version": "0.2.0",
+  "private": true,
+  "license": "MIT",
+  "description": "A local Markdown reader and editor",
+  "main": "dist/src/main/index.js",
+  "engines": {
+    "node": ">=24.20.0 <25"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "start": "npm run setup && npm run build && node scripts/start.mjs",
+    "test": "npm run build && node --test dist/tests/*.test.js",
+    "setup": "node scripts/setup-electron.mjs",
+    "package": "npm run build && node scripts/package.mjs"
+  },
+  "dependencies": {
+    "marked": "18.0.14"
+  },
+  "devDependencies": {
+    "@types/node": "24.19.0",
+    "playwright": "1.62.1",
+    "typescript": "5.9.3"
+  },
+  "config": {
+    "electronVersion": "44.5.0"
+  }
+}

@@ -1,0 +1,11 @@
+#!/bin/sh
+set -eu
+cd "$(dirname "$0")/.."
+case "${1:-fast}" in fast|full) ;; *) echo 'Usage: scripts/check [fast|full]'; exit 2;; esac
+npm test
+node scripts/source-check.mjs
+node scripts/contract-probes.mjs
+if [ "${1:-fast}" = full ]; then
+  mkdir -p .local/dependencies
+  npm audit --json > .local/dependencies/audit.json
+fi
